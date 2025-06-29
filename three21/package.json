@@ -9,12 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^1.2.19",
     "@react-three/drei": "^10.3.0",
     "@react-three/fiber": "^9.1.2",
+    "ai": "^4.3.16",
+    "html2canvas": "^1.4.1",
     "idb-keyval": "^6.2.2",
     "next": "15.3.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
     "three": "^0.177.0"
   },
   "devDependencies": {

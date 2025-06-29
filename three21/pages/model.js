@@ -20,17 +20,26 @@ export default function ModelPage() {
                 setFileUrl(URL.createObjectURL(file));
             } else if (router.isReady) {
                 const url = router.query.file;
+                const queryType = router.query.type;
                 if (url) {
                     setFileUrl(url);
+                    // Determine type from URL extension or query parameter
+                    const detectedType = queryType || (url.toLowerCase().includes('.fbx') ? 'fbx' : 'gltf');
+                    setType(detectedType);
                     localStorage.setItem('lastModelUrl', url);
+                    localStorage.setItem('lastModelType', detectedType);
                 } else {
-                    const last = localStorage.getItem('lastModelUrl');
-                    if (last) setFileUrl(last);
+                    const lastUrl = localStorage.getItem('lastModelUrl');
+                    const lastType = localStorage.getItem('lastModelType');
+                    if (lastUrl && lastType) {
+                        setFileUrl(lastUrl);
+                        setType(lastType);
+                    }
                 }
             }
         }
         loadModel();
-    }, [router.isReady, router.query.file]);
+    }, [router.isReady, router.query.file, router.query.type]);
 
     if (!fileUrl || !type) {
         return (
