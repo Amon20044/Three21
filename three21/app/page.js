@@ -235,7 +235,7 @@ export default function Home() {
                 </div>
                 <h3 className="text-xl font-semibold text-primary mb-3">Multi-format Support</h3>
                 <p className="text-secondary">
-                  GLB, GLTF, FBX, OBJ, and more. Seamless format conversion and optimization for all your 3D assets.
+                  GLB and FBX for now. Seamless format conversion and optimization for all your 3D assets. future updates will include OBJ, STL, and more.
                 </p>
               </div>
 
@@ -257,7 +257,7 @@ export default function Home() {
           <div className="card p-8 mb-16">
             <div className="stats-grid">
               <div>
-                <div className="stat-number stat-number-primary">10+</div>
+                <div className="stat-number stat-number-primary">2</div>
                 <div className="text-lg text-secondary">Supported Formats</div>
               </div>
               <div>
@@ -273,7 +273,7 @@ export default function Home() {
 
           {/* Footer */}
           <footer className="text-center text-secondary text-lg">
-            <p>Built with Three.js, Next.js, and cutting-edge WebGL technology</p>
+            <p>Built with love by Avni & Amon with Three.js, Next.js, and WebGL</p>
           </footer>
         </div>
       </div>
