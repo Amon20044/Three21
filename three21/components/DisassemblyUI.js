@@ -12,6 +12,19 @@ export function DisassemblyUI({ currentLayer, totalLayers, isAnimating, onOpenAI
         return () => clearTimeout(timer);
     }, []);
 
+    // Handle manual disassemble/assemble button clicks
+    const handleDisassemble = () => {
+        // Simulate pressing 'E' key
+        const event = new KeyboardEvent('keydown', { key: 'e' });
+        window.dispatchEvent(event);
+    };
+
+    const handleAssemble = () => {
+        // Simulate pressing 'Q' key
+        const event = new KeyboardEvent('keydown', { key: 'q' });
+        window.dispatchEvent(event);
+    };
+
     console.log('DisassemblyUI rendering:', { currentLayer, totalLayers, isAnimating, showInstructions });
 
     return (
@@ -104,6 +117,30 @@ export function DisassemblyUI({ currentLayer, totalLayers, isAnimating, onOpenAI
                         <span className="progress-text">{Math.round((currentLayer / totalLayers) * 100)}%</span>
                     </div>
                 )}
+            </div>
+
+            {/* Assemble/Disassemble Control Buttons */}
+            <div className="control-buttons">
+                <button
+                    className={`btn-control ${currentLayer <= 0 ? 'btn-control-active' : 'btn-control-secondary'}`}
+                    onClick={handleAssemble}
+                    disabled={currentLayer <= 0 || isAnimating}
+                >
+                    <svg className="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                    <span className="btn-text">Assemble</span>
+                </button>
+                <button
+                    className={`btn-control ${currentLayer >= totalLayers ? 'btn-control-secondary' : 'btn-control-active'}`}
+                    onClick={handleDisassemble}
+                    disabled={currentLayer >= totalLayers || isAnimating}
+                >
+                    <svg className="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                    </svg>
+                    <span className="btn-text">Disassemble</span>
+                </button>
             </div>
 
             {/* Show/Hide Instructions Button */}
@@ -1127,6 +1164,193 @@ export function DisassemblyUI({ currentLayer, totalLayers, isAnimating, onOpenAI
                     100% {
                         opacity: 0;
                         transform: translate(-50%, -50%) scale(2);
+                    }
+                }
+
+                /* Control Buttons - Same Style as Demo Viewer */
+                .control-buttons {
+                    position: fixed;
+                    bottom: 2rem;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 1rem;
+                    padding: 1rem;
+                    background: rgba(255, 255, 255, 0.1);
+                    backdrop-filter: blur(20px);
+                    -webkit-backdrop-filter: blur(20px);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    border-radius: 16px;
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                    z-index: 100;
+                    min-width: 280px;
+                }
+
+                .btn-control {
+                    position: relative;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.5rem;
+                    height: 2.75rem;
+                    padding: 0 1rem;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    background: rgba(255, 255, 255, 0.1);
+                    color: #fafafa;
+                    border-radius: 12px;
+                    font-size: 0.875rem;
+                    font-weight: 500;
+                    font-family: inherit;
+                    text-decoration: none;
+                    outline: none;
+                    cursor: pointer;
+                    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                    overflow: hidden;
+                    user-select: none;
+                    white-space: nowrap;
+                    width: 100%;
+                }
+
+                .btn-control:focus-visible {
+                    outline: 2px solid #3b82f6;
+                    outline-offset: 2px;
+                }
+
+                .btn-control::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+                    transition: left 0.5s ease;
+                    z-index: 1;
+                }
+
+                .btn-control:hover:not(:disabled) {
+                    background: rgba(59, 130, 246, 0.8);
+                    color: #ffffff;
+                    border-color: #3b82f6;
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+                }
+
+                .btn-control:hover:not(:disabled)::before {
+                    left: 100%;
+                }
+
+                .btn-control-active {
+                    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+                    color: #ffffff;
+                    border-color: #3b82f6;
+                    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+                    transform: translateY(-1px);
+                }
+
+                .btn-control-active:hover:not(:disabled) {
+                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+                    transform: translateY(-2px);
+                }
+
+                .btn-control-secondary {
+                    background: rgba(100, 116, 139, 0.8);
+                    color: #cbd5e1;
+                    border-color: rgba(100, 116, 139, 0.5);
+                }
+
+                .btn-control-secondary:hover:not(:disabled) {
+                    background: rgba(59, 130, 246, 0.8);
+                    color: #ffffff;
+                    border-color: #3b82f6;
+                    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25);
+                }
+
+                .btn-control:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                    background: rgba(100, 116, 139, 0.3);
+                    color: rgba(203, 213, 225, 0.6);
+                    border-color: rgba(100, 116, 139, 0.3);
+                    transform: none;
+                    box-shadow: none;
+                    pointer-events: none;
+                }
+
+                .btn-control:disabled::before {
+                    display: none;
+                }
+
+                .btn-control .btn-icon {
+                    width: 1rem;
+                    height: 1rem;
+                    stroke-width: 2;
+                    flex-shrink: 0;
+                    position: relative;
+                    z-index: 2;
+                }
+
+                .btn-control .btn-text {
+                    font-weight: 600;
+                    letter-spacing: 0.025em;
+                    position: relative;
+                    z-index: 2;
+                }
+
+                /* Mobile Responsive Design for Control Buttons */
+                @media (max-width: 768px) {
+                    .control-buttons {
+                        bottom: 1rem;
+                        left: 1rem;
+                        right: 1rem;
+                        transform: none;
+                        min-width: auto;
+                        max-width: none;
+                    }
+
+                    .btn-control {
+                        height: 2.75rem;
+                        font-size: 0.9rem;
+                        gap: 0.6rem;
+                    }
+
+                    .btn-control .btn-icon {
+                        width: 1.1rem;
+                        height: 1.1rem;
+                    }
+
+                    .btn-control .btn-text {
+                        font-size: 0.9rem;
+                        font-weight: 600;
+                    }
+                }
+
+                /* Small Mobile Responsive Design */
+                @media (max-width: 480px) {
+                    .control-buttons {
+                        gap: 0.75rem;
+                        padding: 0.875rem;
+                        bottom: 0.75rem;
+                        left: 0.75rem;
+                        right: 0.75rem;
+                    }
+
+                    .btn-control {
+                        height: 2.5rem;
+                        font-size: 0.8rem;
+                        gap: 0.5rem;
+                    }
+
+                    .btn-control .btn-icon {
+                        width: 1rem;
+                        height: 1rem;
+                    }
+
+                    .btn-control .btn-text {
+                        font-size: 0.8rem;
+                        font-weight: 700;
                     }
                 }
             `}</style>

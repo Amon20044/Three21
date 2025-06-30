@@ -109,7 +109,7 @@ export default function Home() {
           <div className="main-bento-grid mb-16">
             {/* Main CTA Card */}
             <div className="main-cta-card card p-8 flex flex-col justify-between">
-              <div>
+              <div className="cta-content">
                 <div className="feature-icon feature-icon-primary mb-6">
                   <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
@@ -137,50 +137,45 @@ export default function Home() {
                 </Link>
               </div>
 
-              <Suspense fallback={
-                <div className="demo-loading-placeholder">
-                  <div className="loading-spinner">
-                    <svg className="w-8 h-8 text-accent" viewBox="0 0 24 24">
-                      <circle
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeDasharray="31.416"
-                        strokeDashoffset="31.416"
-                      >
-                        <animate
-                          attributeName="stroke-dasharray"
-                          dur="2s"
-                          values="0 31.416;15.708 15.708;0 31.416;0 31.416"
-                          repeatCount="indefinite"
-                        />
-                        <animate
-                          attributeName="stroke-dashoffset"
-                          dur="2s"
-                          values="0;-15.708;-31.416;-31.416"
-                          repeatCount="indefinite"
-                        />
-                      </circle>
-                    </svg>
+              <div className="demo-viewer-wrapper">
+                <Suspense fallback={
+                  <div className="demo-loading-placeholder">
+                    <div className="loading-spinner">
+                      <svg className="w-8 h-8 text-accent" viewBox="0 0 24 24">
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeDasharray="31.416"
+                          strokeDashoffset="31.416"
+                        >
+                          <animate
+                            attributeName="stroke-dasharray"
+                            dur="2s"
+                            values="0 31.416;15.708 15.708;0 31.416;0 31.416"
+                            repeatCount="indefinite"
+                          />
+                          <animate
+                            attributeName="stroke-dashoffset"
+                            dur="2s"
+                            values="0;-15.708;-31.416;-31.416"
+                            repeatCount="indefinite"
+                          />
+                        </circle>
+                      </svg>
+                    </div>
                   </div>
-                </div>
-              }>
-                <EmbeddedDemoViewer
-                  isAssembled={isAssembled}
-                  onAssembleChange={setIsAssembled}
-                />
-              </Suspense>
-
-              {/* <div className="spline-viewer">
-                <Spline
-                  scene="https://prod.spline.design/rBa4faxZCxx91uYO/scene.splinecode"
-                />
-              </div> */}
-
+                }>
+                  <EmbeddedDemoViewer
+                    isAssembled={isAssembled}
+                    onAssembleChange={setIsAssembled}
+                  />
+                </Suspense>
+              </div>
             </div>
 
             {/* Live Demo Section with 3D Model */}
@@ -442,6 +437,18 @@ export default function Home() {
           overflow: hidden;
         }
 
+        .cta-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .demo-viewer-wrapper {
+          flex: 1;
+          min-height: 300px;
+          margin-left: 2rem;
+        }
+
         /* Demo Section Styles */
         .demo-section-card {
           min-height: 400px;
@@ -562,13 +569,24 @@ export default function Home() {
           .main-bento-grid {
             grid-template-columns: 1fr;
             grid-template-areas: 
-              "demo"
               "main-cta"
               "features";
           }
           
-          .demo-section-card {
-            order: -1;
+          .main-cta-card {
+            flex-direction: column;
+            min-height: 500px;
+            gap: 1rem;
+          }
+
+          .cta-content {
+            order: 1;
+          }
+
+          .demo-viewer-wrapper {
+            order: 2;
+            margin-left: 0;
+            min-height: 250px;
           }
 
           .features-container {
@@ -578,6 +596,8 @@ export default function Home() {
           .upload-button-container {
             bottom: 1.5rem;
             left: 1.5rem;
+            position: relative;
+            margin-top: 1rem;
           }
 
           .btn-upload {
@@ -596,12 +616,25 @@ export default function Home() {
             font-size: 2rem;
           }
           
-          .demo-viewer-container {
-            min-height: 250px;
+          .main-cta-card {
+            flex-direction: column;
+            min-height: 600px;
+            padding: 1.5rem;
+            gap: 1.5rem;
+          }
+
+          .cta-content {
+            order: 1;
+          }
+
+          .demo-viewer-wrapper {
+            order: 2;
+            min-height: 300px;
+            margin-left: 0;
           }
 
           .demo-loading-placeholder {
-            min-height: 250px;
+            min-height: 300px;
           }
 
           .features-container {
@@ -614,10 +647,12 @@ export default function Home() {
           }
 
           .upload-button-container {
-            bottom: 1rem;
-            left: 1rem;
-            right: 1rem;
-            position: absolute;
+            position: relative;
+            bottom: auto;
+            left: auto;
+            right: auto;
+            margin-top: 1rem;
+            order: 3;
           }
 
           .btn-upload {
