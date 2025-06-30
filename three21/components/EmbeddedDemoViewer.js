@@ -251,7 +251,7 @@ function useOptimizedLayerManager(modelRef, disassembleDistance = 0.05) {
         animationRef.current = {
             isActive: true,
             startTime: Date.now(),
-            duration: 1200,
+            duration: 500,
             targets: animationTargets,
             type: 'assemble'
         };
@@ -382,7 +382,7 @@ export default function EmbeddedDemoViewer({
         currentLayer,
         totalLayers,
         isInitialized
-    } = useOptimizedLayerManager(modelRef, 0.2); // Increased distance for better visibility
+    } = useOptimizedLayerManager(modelRef, 0.1); // Increased distance for better visibility
 
     // Toast state for object clicking
     const [toast, setToast] = useState({ message: '', isVisible: false });
@@ -465,7 +465,7 @@ export default function EmbeddedDemoViewer({
                             type="fbx"
                             onModelLoad={handleModelLoad}
                             onObjectClick={handleObjectClick}
-                            position={[0, 0, 0]}
+                            position={[0, -50, 0]}
                         />
                     </Suspense>
 
@@ -541,7 +541,7 @@ export default function EmbeddedDemoViewer({
             </div>
 
             {/* Layer Progress Indicator - Absolute Positioned */}
-            {totalLayers > 0 && (
+            {/* {totalLayers > 0 && (
                 <div className="layer-progress">
                     <div className="progress-info">
                         <span className="progress-text">Layer {currentLayer} of {totalLayers}</span>
@@ -553,7 +553,7 @@ export default function EmbeddedDemoViewer({
                         </div>
                     </div>
                 </div>
-            )}
+            )} */}
 
             <Toast
                 message={toast.message}

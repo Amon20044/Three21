@@ -12,7 +12,7 @@ export function useLayerManager(modelRef) {
     const animationRef = useRef({
         isActive: false,
         startTime: 0,
-        duration: 1000, // 1 second
+        duration: 500, // 1 second
         targets: [],
         type: 'none' // 'disassemble', 'reassemble'
     });
@@ -235,7 +235,7 @@ export function useLayerManager(modelRef) {
         animationRef.current = {
             isActive: true,
             startTime: Date.now(),
-            duration: 1500, // Slightly longer for smoother motion
+            duration: 500, // Slightly longer for smoother motion
             targets: animationTargets,
             type: 'disassemble'
         };
@@ -276,7 +276,7 @@ export function useLayerManager(modelRef) {
         animationRef.current = {
             isActive: true,
             startTime: Date.now(),
-            duration: 1200, // Slightly longer for smooth reassembly
+            duration: 500, // Slightly longer for smooth reassembly
             targets: animationTargets,
             type: 'reassemble'
         };
