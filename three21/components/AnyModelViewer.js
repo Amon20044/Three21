@@ -1,4 +1,4 @@
-import { Suspense, useRef, useCallback, useEffect } from 'react';
+import { Suspense, useRef, useCallback, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Environment } from '@react-three/drei';
 import { InteractiveModelPrimitive } from './InteractiveModelPrimitive';
@@ -7,12 +7,16 @@ import { useLayerManager } from './LayerManager';
 import { AnimationController } from './AnimationController';
 import { Three21Bot } from './Three21Bot';
 import { useModelInfo } from './ModelInfoContext';
+import { Toast } from './Toast';
 import html2canvas from 'html2canvas';
 
 export default function AnyModelViewer({ url, type }) {
     const modelRef = useRef();
     const canvasRef = useRef();
     const { initializeLayers, currentLayer, isAnimating, totalLayers, updateAnimation } = useLayerManager(modelRef);
+    
+    // Toast state for object clicking
+    const [toast, setToast] = useState({ message: '', isVisible: false });
     
     // Use optional chaining to prevent context errors
     const modelInfoContext = useModelInfo();
@@ -40,6 +44,22 @@ export default function AnyModelViewer({ url, type }) {
             }, 100);
         }
     }, [initializeLayers]);
+
+    // Handle object click
+    const handleObjectClick = useCallback((objectName, clickedObject) => {
+        console.log('Object clicked:', objectName, clickedObject);
+        
+        // Show toast with object name
+        setToast({
+            message: `Clicked: ${objectName}`,
+            isVisible: true
+        });
+    }, []);
+
+    // Hide toast
+    const hideToast = useCallback(() => {
+        setToast(prev => ({ ...prev, isVisible: false }));
+    }, []);
 
     // Screenshot functionality
     const handleScreenshot = useCallback(async () => {
@@ -160,6 +180,7 @@ export default function AnyModelViewer({ url, type }) {
                         url={url} 
                         type={type} 
                         onModelLoad={handleModelLoad}
+                        onObjectClick={handleObjectClick}
                     />
                 </Suspense>
                 <OrbitControls enableDamping dampingFactor={0.1} />
@@ -183,6 +204,12 @@ export default function AnyModelViewer({ url, type }) {
                     onScreenshot={handleScreenshot}
                 />
             )}
+
+            <Toast 
+                message={toast.message}
+                isVisible={toast.isVisible}
+                onHide={hideToast}
+            />
         </div>
     );
 }

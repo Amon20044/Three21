@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import * as THREE from 'three';
 
-export const InteractiveModelPrimitive = forwardRef(({ url, type, onModelLoad }, ref) => {
+export const InteractiveModelPrimitive = forwardRef(({ url, type, onModelLoad, onObjectClick }, ref) => {
     // Load the model
     const object = useLoader(type === 'fbx' ? FBXLoader : GLTFLoader, url);
     const scene = type === 'fbx' ? object : object.scene;
@@ -157,7 +157,23 @@ export const InteractiveModelPrimitive = forwardRef(({ url, type, onModelLoad },
         };
     }, [scene]);
     
-    return <primitive ref={ref} object={scene} />;
+    // Handle click events
+    const handleClick = (event) => {
+        event.stopPropagation();
+        const clickedObject = event.object;
+        
+        if (clickedObject && onObjectClick) {
+            // Get the name of the clicked object or generate one
+            const objectName = clickedObject.name || 
+                              clickedObject.userData.name || 
+                              clickedObject.type || 
+                              `${clickedObject.type}_${clickedObject.id}`;
+            
+            onObjectClick(objectName, clickedObject);
+        }
+    };
+    
+    return <primitive ref={ref} object={scene} onClick={handleClick} />;
 });
 
 InteractiveModelPrimitive.displayName = 'InteractiveModelPrimitive';
