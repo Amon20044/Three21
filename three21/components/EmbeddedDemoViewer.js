@@ -474,8 +474,8 @@ export default function EmbeddedDemoViewer({
                         dampingFactor={0.1}
                         enableZoom={true}
                         enablePan={true}
-                        maxDistance={100}
-                        minDistance={5}
+                        maxDistance={140}
+                        minDistance={30}
                     />
                     <Environment preset="studio" background={false} />
                     <AnimationController updateAnimation={updateAnimation} />
