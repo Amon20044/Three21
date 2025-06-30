@@ -1,103 +1,121 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-background">
+      <div className="container py-16">
+        {/* Header */}
+        <header className="text-center mb-16 animate-fadeIn">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-primary mb-6">
+            Three21
+          </h1>
+          <p className="text-lg md:text-xl text-secondary max-w-3xl mx-auto">
+            Advanced 3D model visualization and analysis platform. Upload, explore, and dissect your 3D models with cutting-edge technology.
+          </p>
+        </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        {/* Bento Grid Layout */}
+        <div className="bento-grid mb-16">
+          {/* Main CTA Card */}
+          <div className="bento-main card p-8 flex flex-col justify-between">
+            <div>
+              <div className="feature-icon feature-icon-primary mb-6">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                </svg>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">
+                Start Exploring
+              </h2>
+              <p className="text-lg text-secondary mb-8">
+                Upload your 3D models and experience next-generation visualization. Support for GLB, GLTF, FBX, and more formats with real-time rendering capabilities.
+              </p>
+            </div>
+            <Link 
+              href="/import-model"
+              className="btn btn-primary btn-lg inline-flex items-center gap-2"
+            >
+              Upload Model
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </Link>
+          </div>
+
+          {/* Feature Cards */}
+          <div className="bento-feature card p-6">
+            <div className="feature-icon feature-icon-secondary mb-4">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold text-primary mb-3">Real-time Rendering</h3>
+            <p className="text-secondary">
+              High-performance WebGL rendering with advanced lighting, shadows, and materials for stunning visual quality.
+            </p>
+          </div>
+
+          <div className="bento-feature card p-6">
+            <div className="feature-icon feature-icon-info mb-4">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold text-primary mb-3">Interactive Analysis</h3>
+            <p className="text-secondary">
+              Inspect models with advanced tools, layer management, and precise dissection capabilities for detailed examination.
+            </p>
+          </div>
+
+          <div className="bento-feature card p-6">
+            <div className="feature-icon feature-icon-success mb-4">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold text-primary mb-3">Multi-format Support</h3>
+            <p className="text-secondary">
+              GLB, GLTF, FBX, OBJ, and more. Seamless format conversion and optimization for all your 3D assets.
+            </p>
+          </div>
+
+          <div className="bento-feature card p-6">
+            <div className="feature-icon feature-icon-primary mb-4">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold text-primary mb-3">AI-Powered Insights</h3>
+            <p className="text-secondary">
+              Get intelligent analysis, optimization suggestions, and automated reports for your 3D models.
+            </p>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Statistics Section */}
+        <div className="card p-8 mb-16">
+          <div className="stats-grid">
+            <div>
+              <div className="stat-number stat-number-primary">10+</div>
+              <div className="text-lg text-secondary">Supported Formats</div>
+            </div>
+            <div>
+              <div className="stat-number stat-number-secondary">Real-time</div>
+              <div className="text-lg text-secondary">Rendering Engine</div>
+            </div>
+            <div>
+              <div className="stat-number stat-number-success">Advanced</div>
+              <div className="text-lg text-secondary">Analysis Tools</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <footer className="text-center text-secondary text-lg">
+          <p>Built with Three.js, Next.js, and cutting-edge WebGL technology</p>
+        </footer>
+      </div>
     </div>
   );
 }

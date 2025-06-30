@@ -48,38 +48,57 @@ export function ModelInfoCollector({
     ];
 
     return (
-        <div className="model-info-collector">
-            <div className="collector-container">
-                <div className="collector-header">
-                    <h2>📋 Tell us about your model</h2>
-                    <p>Help Three21Bot understand your model better for AI-powered analysis</p>
+        <div className="model-info-overlay">
+            <div className="model-info-container">
+                <div className="model-info-header">
+                    <div className="header-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <h2>Model Information</h2>
+                    <p>Help us understand your model better for enhanced AI analysis</p>
                 </div>
 
-                <div className="file-preview">
-                    <div className="file-icon">
-                        📄
+                <div className="file-preview-card">
+                    <div className="file-preview-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                            <polyline points="14,2 14,8 20,8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10,9 9,9 8,9"/>
+                        </svg>
                     </div>
-                    <div className="file-details">
+                    <div className="file-preview-details">
                         <h3>{fileName}</h3>
-                        <span className="file-type">{fileType.toUpperCase()} File</span>
+                        <span className="file-type-badge">{fileType.toUpperCase()}</span>
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="info-form">
-                    <div className="form-group">
-                        <label>Model Description</label>
+                <form onSubmit={handleSubmit} className="model-info-form">
+                    <div className="form-section">
+                        <label className="form-label">
+                            Description
+                            <span className="form-label-optional">Optional</span>
+                        </label>
                         <textarea
+                            className="form-textarea"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            placeholder="Describe what this model represents (e.g., 'Engine block for a V8 motor', 'Smartphone housing design', etc.)"
+                            placeholder="Describe what this model represents..."
                             rows={3}
                         />
                     </div>
 
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label>Category</label>
-                            <select value={category} onChange={(e) => setCategory(e.target.value)}>
+                    <div className="form-grid">
+                        <div className="form-section">
+                            <label className="form-label">Category</label>
+                            <select 
+                                className="form-select"
+                                value={category} 
+                                onChange={(e) => setCategory(e.target.value)}
+                            >
                                 <option value="">Select category...</option>
                                 {categories.map(cat => (
                                     <option key={cat} value={cat}>{cat}</option>
@@ -87,9 +106,13 @@ export function ModelInfoCollector({
                             </select>
                         </div>
 
-                        <div className="form-group">
-                            <label>Purpose</label>
-                            <select value={purpose} onChange={(e) => setPurpose(e.target.value)}>
+                        <div className="form-section">
+                            <label className="form-label">Purpose</label>
+                            <select 
+                                className="form-select"
+                                value={purpose} 
+                                onChange={(e) => setPurpose(e.target.value)}
+                            >
                                 <option value="">Select purpose...</option>
                                 {purposes.map(purp => (
                                     <option key={purp} value={purp}>{purp}</option>
@@ -98,23 +121,25 @@ export function ModelInfoCollector({
                         </div>
                     </div>
 
-                    <div className="form-group">
-                        <label>Complexity Level</label>
-                        <div className="complexity-selector">
+                    <div className="form-section">
+                        <label className="form-label">Complexity Level</label>
+                        <div className="complexity-grid">
                             {[
-                                { value: 'simple', label: '🟢 Simple', desc: 'Basic shapes, few parts' },
-                                { value: 'medium', label: '🟡 Medium', desc: 'Multiple components' },
-                                { value: 'complex', label: '🔴 Complex', desc: 'Highly detailed, many parts' }
-                            ].map(({ value, label, desc }) => (
-                                <label key={value} className={`complexity-option ${complexity === value ? 'selected' : ''}`}>
+                                { value: 'simple', label: 'Simple', desc: 'Basic shapes, few parts', icon: '●' },
+                                { value: 'medium', label: 'Medium', desc: 'Multiple components', icon: '●●' },
+                                { value: 'complex', label: 'Complex', desc: 'Highly detailed, many parts', icon: '●●●' }
+                            ].map(({ value, label, desc, icon }) => (
+                                <label key={value} className={`complexity-card ${complexity === value ? 'selected' : ''}`}>
                                     <input
                                         type="radio"
                                         value={value}
                                         checked={complexity === value}
                                         onChange={(e) => setComplexity(e.target.value)}
+                                        className="complexity-radio"
                                     />
-                                    <div className="complexity-content">
-                                        <span className="complexity-label">{label}</span>
+                                    <div className="complexity-indicator">{icon}</div>
+                                    <div className="complexity-info">
+                                        <span className="complexity-title">{label}</span>
                                         <span className="complexity-desc">{desc}</span>
                                     </div>
                                 </label>
@@ -122,13 +147,17 @@ export function ModelInfoCollector({
                         </div>
                     </div>
 
-                    <div className="form-group">
-                        <label>Tags (optional)</label>
+                    <div className="form-section">
+                        <label className="form-label">
+                            Tags
+                            <span className="form-label-optional">Optional</span>
+                        </label>
                         <input
                             type="text"
+                            className="form-input"
                             value={tags}
                             onChange={(e) => setTags(e.target.value)}
-                            placeholder="mechanical, automotive, engine (comma-separated)"
+                            placeholder="mechanical, automotive, engine..."
                         />
                     </div>
 
@@ -136,318 +165,50 @@ export function ModelInfoCollector({
                         <button 
                             type="button" 
                             onClick={handleSkip}
-                            className="skip-button"
+                            className="btn btn-ghost"
                             disabled={isLoading}
                         >
                             Skip for now
                         </button>
                         <button 
                             type="submit" 
-                            className="submit-button"
+                            className="btn btn-primary"
                             disabled={isLoading}
                         >
-                            {isLoading ? '⏳ Processing...' : '🚀 Continue with AI Analysis'}
+                            {isLoading ? (
+                                <>
+                                    <div className="btn-spinner"></div>
+                                    Processing...
+                                </>
+                            ) : (
+                                <>
+                                    Continue Analysis
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <path d="M5 12h14m-7-7l7 7-7 7"/>
+                                    </svg>
+                                </>
+                            )}
                         </button>
                     </div>
                 </form>
 
-                <div className="ai-features">
-                    <h4>🤖 What Three21Bot will help you with:</h4>
-                    <ul>
-                        <li>🔍 Identify individual components and their functions</li>
-                        <li>⚙️ Explain assembly mechanisms and connections</li>
-                        <li>🛠️ Provide reverse engineering insights</li>
-                        <li>📐 Analyze materials and manufacturing methods</li>
-                        <li>🎯 Answer questions about specific parts</li>
+                <div className="ai-features-card">
+                    <div className="ai-features-header">
+                        <div className="ai-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            </svg>
+                        </div>
+                        <h4>AI Analysis Features</h4>
+                    </div>
+                    <ul className="ai-features-list">
+                        <li>Component identification and analysis</li>
+                        <li>Assembly mechanism insights</li>
+                        <li>Material and manufacturing analysis</li>
+                        <li>Interactive Q&A about your model</li>
                     </ul>
                 </div>
             </div>
-
-            <style jsx>{`
-                .model-info-collector {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 20px;
-                    z-index: 1000;
-                }
-
-                .collector-container {
-                    background: rgba(255, 255, 255, 0.05);
-                    backdrop-filter: blur(20px);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-radius: 20px;
-                    padding: 40px;
-                    max-width: 600px;
-                    width: 100%;
-                    max-height: 90vh;
-                    overflow-y: auto;
-                }
-
-                .collector-header {
-                    text-align: center;
-                    margin-bottom: 30px;
-                }
-
-                .collector-header h2 {
-                    color: #00ffd0;
-                    font-size: 28px;
-                    margin: 0 0 10px 0;
-                    font-weight: 700;
-                }
-
-                .collector-header p {
-                    color: #ccd6f6;
-                    font-size: 16px;
-                    margin: 0;
-                    opacity: 0.8;
-                }
-
-                .file-preview {
-                    display: flex;
-                    align-items: center;
-                    gap: 15px;
-                    background: rgba(0, 255, 208, 0.1);
-                    border: 1px solid rgba(0, 255, 208, 0.3);
-                    border-radius: 12px;
-                    padding: 20px;
-                    margin-bottom: 30px;
-                }
-
-                .file-icon {
-                    font-size: 32px;
-                    width: 60px;
-                    height: 60px;
-                    background: linear-gradient(135deg, #00ffd0 0%, #2a5298 100%);
-                    border-radius: 12px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                .file-details h3 {
-                    color: #00ffd0;
-                    margin: 0 0 5px 0;
-                    font-size: 18px;
-                    font-weight: 600;
-                }
-
-                .file-type {
-                    color: #8892b0;
-                    font-size: 14px;
-                    font-weight: 500;
-                }
-
-                .info-form {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 24px;
-                }
-
-                .form-group {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 8px;
-                }
-
-                .form-row {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    gap: 20px;
-                }
-
-                .form-group label {
-                    color: #ccd6f6;
-                    font-weight: 600;
-                    font-size: 14px;
-                }
-
-                .form-group input,
-                .form-group textarea,
-                .form-group select {
-                    background: rgba(255, 255, 255, 0.05);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-radius: 8px;
-                    padding: 12px 16px;
-                    color: #ccd6f6;
-                    font-size: 14px;
-                    outline: none;
-                    transition: all 0.2s ease;
-                }
-
-                .form-group input:focus,
-                .form-group textarea:focus,
-                .form-group select:focus {
-                    border-color: #00ffd0;
-                    box-shadow: 0 0 0 2px rgba(0, 255, 208, 0.2);
-                }
-
-                .form-group input::placeholder,
-                .form-group textarea::placeholder {
-                    color: #8892b0;
-                }
-
-                .complexity-selector {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 12px;
-                }
-
-                .complexity-option {
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                    background: rgba(255, 255, 255, 0.05);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-radius: 8px;
-                    padding: 16px;
-                    cursor: pointer;
-                    transition: all 0.2s ease;
-                }
-
-                .complexity-option:hover,
-                .complexity-option.selected {
-                    border-color: #00ffd0;
-                    background: rgba(0, 255, 208, 0.1);
-                }
-
-                .complexity-option input[type="radio"] {
-                    margin: 0;
-                    accent-color: #00ffd0;
-                }
-
-                .complexity-content {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 4px;
-                }
-
-                .complexity-label {
-                    color: #ccd6f6;
-                    font-weight: 600;
-                    font-size: 14px;
-                }
-
-                .complexity-desc {
-                    color: #8892b0;
-                    font-size: 12px;
-                }
-
-                .form-actions {
-                    display: flex;
-                    gap: 16px;
-                    margin-top: 20px;
-                }
-
-                .skip-button,
-                .submit-button {
-                    flex: 1;
-                    padding: 14px 24px;
-                    border-radius: 12px;
-                    font-size: 16px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: all 0.2s ease;
-                    border: none;
-                    outline: none;
-                }
-
-                .skip-button {
-                    background: rgba(255, 255, 255, 0.1);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    color: #ccd6f6;
-                }
-
-                .skip-button:hover:not(:disabled) {
-                    background: rgba(255, 255, 255, 0.15);
-                }
-
-                .submit-button {
-                    background: linear-gradient(90deg, #00ffd0 0%, #2a5298 100%);
-                    color: #1e3c72;
-                }
-
-                .submit-button:hover:not(:disabled) {
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 20px rgba(0, 255, 208, 0.3);
-                }
-
-                .skip-button:disabled,
-                .submit-button:disabled {
-                    opacity: 0.5;
-                    cursor: not-allowed;
-                    transform: none;
-                }
-
-                .ai-features {
-                    margin-top: 30px;
-                    padding: 20px;
-                    background: rgba(0, 255, 208, 0.05);
-                    border: 1px solid rgba(0, 255, 208, 0.2);
-                    border-radius: 12px;
-                }
-
-                .ai-features h4 {
-                    color: #00ffd0;
-                    margin: 0 0 12px 0;
-                    font-size: 16px;
-                    font-weight: 600;
-                }
-
-                .ai-features ul {
-                    margin: 0;
-                    padding-left: 0;
-                    list-style: none;
-                }
-
-                .ai-features li {
-                    color: #ccd6f6;
-                    margin: 8px 0;
-                    font-size: 14px;
-                    line-height: 1.5;
-                }
-
-                /* Scrollbar Styles */
-                .collector-container::-webkit-scrollbar {
-                    width: 6px;
-                }
-
-                .collector-container::-webkit-scrollbar-track {
-                    background: rgba(255, 255, 255, 0.1);
-                    border-radius: 3px;
-                }
-
-                .collector-container::-webkit-scrollbar-thumb {
-                    background: rgba(0, 255, 208, 0.3);
-                    border-radius: 3px;
-                }
-
-                @media (max-width: 768px) {
-                    .collector-container {
-                        padding: 20px;
-                        margin: 10px;
-                    }
-
-                    .form-row {
-                        grid-template-columns: 1fr;
-                        gap: 16px;
-                    }
-
-                    .form-actions {
-                        flex-direction: column;
-                    }
-
-                    .collector-header h2 {
-                        font-size: 24px;
-                    }
-                }
-            `}</style>
         </div>
     );
 }
