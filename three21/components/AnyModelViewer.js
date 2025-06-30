@@ -23,14 +23,7 @@ export default function AnyModelViewer({ url, type }) {
         closeAI, 
         setIsAIOpen, 
         loadModelInfo 
-    } = modelInfoContext || {
-        modelInfo: null,
-        isAIOpen: false,
-        selectedPart: null,
-        closeAI: () => {},
-        setIsAIOpen: () => {},
-        loadModelInfo: () => Promise.resolve()
-    };
+    } = modelInfoContext;
     
     // Load model info when component mounts
     useEffect(() => {
@@ -76,10 +69,75 @@ export default function AnyModelViewer({ url, type }) {
     }, [setIsAIOpen]);
 
     return (
-        <div ref={canvasRef} style={{ width: '100vw', height: '100vh', background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)', position: 'relative' }}>
-            <Canvas camera={{ position: [0, 1.5, 3], fov: 60 }} shadows>
-                <ambientLight intensity={0.7} />
-                <directionalLight position={[5, 10, 7]} intensity={1.2} castShadow />
+        <div ref={canvasRef} className="dark-theme" style={{ 
+            width: '100vw', 
+            height: '100vh', 
+            background: 'radial-gradient(ellipse at center, #1a1a1a 0%, #000000 70%, #000000 100%)', 
+            position: 'relative' 
+        }}>
+            <Canvas 
+                camera={{ position: [0, 1.5, 3], fov: 60 }} 
+                shadows
+                gl={{ 
+                    antialias: true, 
+                    alpha: true,
+                    powerPreference: "high-performance"
+                }}
+            >
+                {/* Enhanced lighting for maximum model visibility */}
+                <ambientLight intensity={0.8} color="#ffffff" />
+                <directionalLight 
+                    position={[10, 10, 5]} 
+                    intensity={1.5} 
+                    castShadow 
+                    color="#ffffff"
+                    shadow-mapSize-width={2048}
+                    shadow-mapSize-height={2048}
+                />
+                <directionalLight 
+                    position={[-10, 10, 5]} 
+                    intensity={1.2} 
+                    color="#ffffff"
+                />
+                <directionalLight 
+                    position={[0, -10, 5]} 
+                    intensity={1.0} 
+                    color="#ffffff"
+                />
+                <directionalLight 
+                    position={[0, 0, -10]} 
+                    intensity={1.0} 
+                    color="#ffffff"
+                />
+                {/* Multiple point lights for comprehensive illumination */}
+                <pointLight 
+                    position={[0, 5, 10]} 
+                    intensity={1.5} 
+                    color="#ffffff"
+                    distance={50}
+                    decay={1}
+                />
+                <pointLight 
+                    position={[10, 0, 0]} 
+                    intensity={1.2} 
+                    color="#ffffff"
+                    distance={40}
+                    decay={1}
+                />
+                <pointLight 
+                    position={[-10, 0, 0]} 
+                    intensity={1.2} 
+                    color="#ffffff"
+                    distance={40}
+                    decay={1}
+                />
+                <pointLight 
+                    position={[0, -5, 0]} 
+                    intensity={1.0} 
+                    color="#ffffff"
+                    distance={40}
+                    decay={1}
+                />
                 <Suspense fallback={null}>
                     <InteractiveModelPrimitive 
                         ref={modelRef}
@@ -89,7 +147,7 @@ export default function AnyModelViewer({ url, type }) {
                     />
                 </Suspense>
                 <OrbitControls enableDamping dampingFactor={0.1} />
-                <Environment preset="sunset" background={false} />
+                <Environment preset="night" background={false} />
                 <AnimationController updateAnimation={updateAnimation} />
             </Canvas>
             

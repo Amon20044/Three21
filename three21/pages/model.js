@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { get as idbGet } from 'idb-keyval';
+import { ModelInfoProvider } from '../components/ModelInfoContext';
 
 const AnyModelViewer = dynamic(() => import('../components/AnyModelViewer'), { ssr: false });
 
@@ -67,5 +68,9 @@ export default function ModelPage() {
         );
     }
 
-    return <AnyModelViewer url={fileUrl} type={type} />;
+    return (
+        <ModelInfoProvider>
+            <AnyModelViewer url={fileUrl} type={type} />
+        </ModelInfoProvider>
+    );
 }
