@@ -78,7 +78,7 @@ export default function AnyModelViewer({ url, type }) {
             position: 'relative' 
         }}>
             <Canvas 
-                camera={{ position: [0, 1.5, 3], fov: 60 }} 
+                camera={{ position: [0, 20, 40], fov: 60 }} 
                 shadows
                 gl={{ 
                     antialias: true, 

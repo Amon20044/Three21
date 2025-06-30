@@ -50,7 +50,7 @@
 /* Dark Mode Theme Palette */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #09090b;
+    --background: #0f0f13;
     --foreground: #fafafa;
     --card: #0a0a0b;
     --card-foreground: #fafafa;
