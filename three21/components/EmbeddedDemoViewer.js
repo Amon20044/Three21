@@ -29,7 +29,7 @@ function useOptimizedLayerManager(modelRef, disassembleDistance = 0.05) {
     const animationRef = useRef({
         isActive: false,
         startTime: 0,
-        duration: 1200,
+        duration: 500,
         targets: [],
         type: 'none'
     });
@@ -197,7 +197,7 @@ function useOptimizedLayerManager(modelRef, disassembleDistance = 0.05) {
         animationRef.current = {
             isActive: true,
             startTime: Date.now(),
-            duration: 1500,
+            duration: 500,
             targets: animationTargets,
             type: 'disassemble'
         };
@@ -382,7 +382,7 @@ export default function EmbeddedDemoViewer({
         currentLayer,
         totalLayers,
         isInitialized
-    } = useOptimizedLayerManager(modelRef, 0.08); // Increased distance for better visibility
+    } = useOptimizedLayerManager(modelRef, 0.2); // Increased distance for better visibility
 
     // Toast state for object clicking
     const [toast, setToast] = useState({ message: '', isVisible: false });
@@ -429,7 +429,7 @@ export default function EmbeddedDemoViewer({
                 className="model-canvas-container"
             >
                 <Canvas
-                    camera={{ position: [65, 70, 80], fov: 60 }}
+                    camera={{ position: [65, 200, 150], fov: 60 }}
                     shadows
                     gl={{
                         antialias: true,
@@ -465,6 +465,7 @@ export default function EmbeddedDemoViewer({
                             type="fbx"
                             onModelLoad={handleModelLoad}
                             onObjectClick={handleObjectClick}
+                            position={[0, 0, 0]}
                         />
                     </Suspense>
 
@@ -473,7 +474,7 @@ export default function EmbeddedDemoViewer({
                         dampingFactor={0.1}
                         enableZoom={true}
                         enablePan={true}
-                        maxDistance={150}
+                        maxDistance={100}
                         minDistance={5}
                     />
                     <Environment preset="studio" background={false} />
@@ -515,7 +516,7 @@ export default function EmbeddedDemoViewer({
                 )}
             </div>
 
-            {/* Control Buttons */}
+            {/* Control Buttons - Absolute Positioned */}
             <div className="demo-controls">
                 <button
                     className={`btn-demo ${internalIsAssembled ? 'btn-demo-active' : 'btn-demo-secondary'}`}
@@ -539,7 +540,7 @@ export default function EmbeddedDemoViewer({
                 </button>
             </div>
 
-            {/* Layer Progress Indicator */}
+            {/* Layer Progress Indicator - Absolute Positioned */}
             {totalLayers > 0 && (
                 <div className="layer-progress">
                     <div className="progress-info">
@@ -565,19 +566,19 @@ export default function EmbeddedDemoViewer({
                     position: relative;
                     width: 100%;
                     height: 100%;
-                    background: transparent; /* Transparent background */
+                    background: transparent;
                     border-radius: var(--radius);
                     overflow: hidden;
-                    display: flex;
-                    flex-direction: column;
                 }
 
                 .model-canvas-container {
-                    flex: 1;
-                    position: relative;
-                    background: transparent; /* Transparent background */
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: transparent;
                     border-radius: var(--radius);
-                    min-height: 160px;
                 }
 
                 .animation-indicator {
@@ -600,17 +601,24 @@ export default function EmbeddedDemoViewer({
                     justify-content: center;
                 }
 
-                /* Demo Control Buttons - Equal Width Balanced Design */
+                /* Demo Control Buttons - Absolute Positioned with Glass Blur */
                 .demo-controls {
+                    position: absolute;
+                    bottom: 1rem;
+                    left: 50%;
+                    transform: translateX(-50%);
                     display: grid;
                     grid-template-columns: 1fr 1fr;
                     gap: 1rem;
-                    margin-top: 1.25rem;
-                    padding: 12px 0px 12px 0px;
-                    width: 100%;
-                    max-width: 300px;
-                    margin-left: auto;
-                    margin-right: auto;
+                    padding: 1rem;
+                    background: rgba(255, 255, 255, 0.1);
+                    backdrop-filter: blur(20px);
+                    -webkit-backdrop-filter: blur(20px);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    border-radius: 16px;
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                    z-index: 100;
+                    min-width: 280px;
                 }
 
                 .btn-demo {
@@ -725,13 +733,21 @@ export default function EmbeddedDemoViewer({
                     z-index: 2;
                 }
 
-                /* Layer Progress Indicator */
+                /* Layer Progress Indicator - Absolute Positioned with Glass Blur */
                 .layer-progress {
-                    margin-top: 1rem;
-                    padding: 0.75rem;
-                    background: var(--card);
-                    border: 1px solid var(--border);
-                    border-radius: var(--radius);
+                    position: absolute;
+                    top: 1rem;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    padding: 0.75rem 1rem;
+                    background: rgba(255, 255, 255, 0.1);
+                    backdrop-filter: blur(20px);
+                    -webkit-backdrop-filter: blur(20px);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    border-radius: 12px;
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                    z-index: 100;
+                    min-width: 200px;
                 }
 
                 .progress-info {
@@ -764,12 +780,42 @@ export default function EmbeddedDemoViewer({
                 /* Tablet Responsive Design */
                 @media (max-width: 1024px) {
                     .demo-controls {
-                        gap: 1rem;
-                        margin-top: 1.5rem;
+                        min-width: 260px;
+                        padding: 0.875rem;
+                        gap: 0.875rem;
+                        bottom: 1rem;
                     }
 
                     .btn-demo {
-                        width: 9rem;
+                        height: 2.5rem;
+                        font-size: 0.875rem;
+                        gap: 0.5rem;
+                    }
+
+                    .btn-icon {
+                        width: 1rem;
+                        height: 1rem;
+                    }
+
+                    .layer-progress {
+                        top: 1rem;
+                        min-width: 180px;
+                        padding: 0.625rem 0.875rem;
+                    }
+                }
+
+                /* Mobile Responsive Design */
+                @media (max-width: 768px) {
+                    .demo-controls {
+                        bottom: 1rem;
+                        left: 1rem;
+                        right: 1rem;
+                        transform: none;
+                        min-width: auto;
+                        max-width: none;
+                    }
+
+                    .btn-demo {
                         height: 2.75rem;
                         font-size: 0.9rem;
                         gap: 0.6rem;
@@ -779,64 +825,39 @@ export default function EmbeddedDemoViewer({
                         width: 1.1rem;
                         height: 1.1rem;
                     }
-                }
-
-                /* Mobile Responsive Design */
-                @media (max-width: 768px) {
-                    .demo-controls {
-                        flex-direction: column;
-                        gap: 1rem;
-                        margin-top: 1.5rem;
-                        align-items: center;
-                    }
-
-                    .btn-demo {
-                        width: 10rem;
-                        height: 3rem;
-                        font-size: 1rem;
-                        border-radius: 8px;
-                        gap: 0.75rem;
-                    }
-
-                    .btn-icon {
-                        width: 1.2rem;
-                        height: 1.2rem;
-                    }
 
                     .btn-text {
-                        font-size: 1rem;
+                        font-size: 0.9rem;
                         font-weight: 600;
                     }
 
-                    .model-canvas-container {
-                        min-height: 220px;
-                    }
-
                     .layer-progress {
-                        margin-top: 1.5rem;
-                        padding: 1rem;
+                        top: 1rem;
+                        left: 1rem;
+                        right: 1rem;
+                        transform: none;
+                        min-width: auto;
                     }
 
                     .progress-text {
-                        font-size: 0.875rem;
+                        font-size: 0.8rem;
                     }
                 }
 
                 /* Small Mobile Responsive Design */
                 @media (max-width: 480px) {
                     .demo-controls {
-                        gap: .7rem;
-                        margin-top: 2rem;
-                        display: flex;
-                        flex-direction: row;
-                        align-items: center;
-                        justify-content: center;
+                        gap: 0.75rem;
+                        padding: 0.875rem;
+                        bottom: 0.75rem;
+                        left: 0.75rem;
+                        right: 0.75rem;
                     }
 
                     .btn-demo {
-                        width: 9rem;
-                        border-radius: 10px;
-                        gap: 0.875rem;
+                        height: 2.5rem;
+                        font-size: 0.8rem;
+                        gap: 0.5rem;
                     }
 
                     .btn-icon {
@@ -845,17 +866,19 @@ export default function EmbeddedDemoViewer({
                     }
 
                     .btn-text {
-                        font-size: .8rem;
+                        font-size: 0.8rem;
                         font-weight: 700;
                     }
 
-                    .model-canvas-container {
-                        min-height: 200px;
+                    .layer-progress {
+                        top: 0.75rem;
+                        left: 0.75rem;
+                        right: 0.75rem;
+                        padding: 0.625rem;
                     }
 
-                    .layer-progress {
-                        margin-top: 2rem;
-                        padding: 1.25rem;
+                    .progress-text {
+                        font-size: 0.75rem;
                     }
                 }
 
