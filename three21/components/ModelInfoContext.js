@@ -6,7 +6,8 @@ const ModelInfoContext = createContext();
 export const useModelInfo = () => {
     const context = useContext(ModelInfoContext);
     if (!context) {
-        throw new Error('useModelInfo must be used within ModelInfoProvider');
+        console.warn('useModelInfo used outside ModelInfoProvider, returning null');
+        return null;
     }
     return context;
 };

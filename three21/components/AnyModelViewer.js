@@ -23,7 +23,7 @@ export default function AnyModelViewer({ url, type }) {
         closeAI, 
         setIsAIOpen, 
         loadModelInfo 
-    } = modelInfoContext;
+    } = modelInfoContext || {};
     
     // Load model info when component mounts
     useEffect(() => {
@@ -65,7 +65,9 @@ export default function AnyModelViewer({ url, type }) {
     }, []);
 
     const handleOpenAI = useCallback(() => {
-        setIsAIOpen(true);
+        if (setIsAIOpen) {
+            setIsAIOpen(true);
+        }
     }, [setIsAIOpen]);
 
     return (
@@ -81,7 +83,21 @@ export default function AnyModelViewer({ url, type }) {
                 gl={{ 
                     antialias: true, 
                     alpha: true,
-                    powerPreference: "high-performance"
+                    powerPreference: "high-performance",
+                    preserveDrawingBuffer: true,
+                    failIfMajorPerformanceCaveat: false
+                }}
+                onCreated={({ gl }) => {
+                    // Handle WebGL context loss
+                    gl.domElement.addEventListener('webglcontextlost', (event) => {
+                        console.warn('WebGL context lost, preventing default behavior');
+                        event.preventDefault();
+                    }, false);
+
+                    gl.domElement.addEventListener('webglcontextrestored', (event) => {
+                        console.log('WebGL context restored');
+                        // Context will be automatically restored by Three.js
+                    }, false);
                 }}
             >
                 {/* Enhanced lighting for maximum model visibility */}
@@ -158,7 +174,7 @@ export default function AnyModelViewer({ url, type }) {
                 onOpenAI={handleOpenAI}
             />
 
-            {isAIOpen && (
+            {isAIOpen && closeAI && (
                 <Three21Bot
                     isOpen={isAIOpen}
                     onClose={closeAI}
