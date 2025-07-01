@@ -33,14 +33,27 @@ export default function ModelPage() {
                 setType(DEMO_CONFIG.type);
                 
                 // Check cache status for demo loading feedback
-                const cacheInfo = window.three21DemoCache;
-                if (cacheInfo?.isCached) {
-                    setLoadingSource('cache');
-                } else if (cacheInfo?.isReady) {
-                    setLoadingSource('network');
-                } else {
-                    setLoadingSource('preparing');
-                }
+                const checkCacheStatus = () => {
+                    const cacheInfo = window.three21DemoCache;
+                    if (cacheInfo?.isCached) {
+                        setLoadingSource('cache');
+                    } else if (cacheInfo?.isReady) {
+                        setLoadingSource('network');
+                    } else {
+                        setLoadingSource('preparing');
+                    }
+                };
+                
+                checkCacheStatus();
+                
+                // Also listen for cache status updates
+                const interval = setInterval(() => {
+                    checkCacheStatus();
+                    const cacheInfo = window.three21DemoCache;
+                    if (cacheInfo?.isReady) {
+                        clearInterval(interval);
+                    }
+                }, 100);
                 return;
             }
 

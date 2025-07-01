@@ -170,7 +170,7 @@ What would you like to explore first?`,
                         </div>
                         {selectedPart && (
                             <div className="selected-part">
-                                <span>🎯 Focus: {selectedPart}</span>
+                                <span>🎯 Focus: {typeof selectedPart === 'object' ? selectedPart.name : selectedPart}</span>
                             </div>
                         )}
                     </div>
