@@ -159,8 +159,14 @@ export const InteractiveModelPrimitive = forwardRef(({ url, type, onModelLoad, o
     
     // Handle click events
     const handleClick = (event) => {
+        console.log('InteractiveModelPrimitive: Click event triggered', event);
         event.stopPropagation();
         const clickedObject = event.object;
+        
+        console.log('Clicked object:', clickedObject);
+        console.log('Object name:', clickedObject?.name);
+        console.log('Object type:', clickedObject?.type);
+        console.log('Object userData:', clickedObject?.userData);
         
         if (clickedObject && onObjectClick) {
             // Get the name of the clicked object or generate one
@@ -169,7 +175,10 @@ export const InteractiveModelPrimitive = forwardRef(({ url, type, onModelLoad, o
                               clickedObject.type || 
                               `${clickedObject.type}_${clickedObject.id}`;
             
+            console.log('Calling onObjectClick with:', objectName, clickedObject);
             onObjectClick(objectName, clickedObject);
+        } else {
+            console.log('No clickedObject or onObjectClick callback');
         }
     };
     

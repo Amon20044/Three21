@@ -43,41 +43,55 @@ export default function AnyModelViewer({ url, type, isDemoMode = false, demoConf
     }, [loadModelInfo, isDemoMode]);
 
     const handleModelLoad = useCallback((scene) => {
+        console.log('Model loaded, scene:', scene);
         if (modelRef.current) {
             // Initialize layer system after model loads
             setTimeout(() => {
                 initializeLayers(modelRef.current);
                 
-                // Extract model structure for AI reference in demo mode
-                if (isDemoMode && extractModelStructure) {
+                // Extract model structure for AI reference (for both demo and regular modes)
+                if (extractModelStructure) {
                     const structure = extractModelStructure(scene);
-                    console.log('Demo model structure extracted:', structure);
+                    console.log('Model structure extracted:', structure);
+                    
+                    // In demo mode, this is used for AI reference
+                    if (isDemoMode) {
+                        console.log('Demo mode: Model structure ready for AI');
+                    }
                 }
             }, 100);
         }
     }, [initializeLayers, isDemoMode, extractModelStructure]);
 
-    // Handle object click with demo mode integration
+    // Handle object click with part selection for both demo and regular modes
     const handleObjectClick = useCallback((objectName, clickedObject) => {
         console.log('Object clicked:', objectName, clickedObject);
+        console.log('isDemoMode:', isDemoMode, 'selectPart available:', !!selectPart);
         
-        // In demo mode, automatically select part for AI
-        if (isDemoMode && selectPart) {
-            const partInfo = selectPart(objectName, clickedObject);
-            setToast({ 
-                message: `Selected: ${objectName}${activeDemoConfig ? ' - AI chat opened!' : ''}`, 
-                isVisible: true 
-            });
-            
-            // Auto-hide toast after 3 seconds
-            setTimeout(() => {
-                setToast({ message: '', isVisible: false });
-            }, 3000);
-            
-            return;
+        // Try to select part if selectPart function is available
+        if (selectPart) {
+            try {
+                const partInfo = selectPart(objectName, clickedObject);
+                console.log('Part selected:', partInfo);
+                
+                setToast({ 
+                    message: `Selected: ${objectName}${isDemoMode && activeDemoConfig ? ' - AI chat opened!' : ''}`, 
+                    isVisible: true 
+                });
+                
+                // Auto-hide toast after 3 seconds
+                setTimeout(() => {
+                    setToast({ message: '', isVisible: false });
+                }, 3000);
+                
+                return;
+            } catch (error) {
+                console.error('Error selecting part:', error);
+            }
         }
         
-        // Show toast with object name
+        // Fallback: Show toast with object name only
+        console.log('Fallback: showing toast only');
         setToast({
             message: `Clicked: ${objectName}`,
             isVisible: true
