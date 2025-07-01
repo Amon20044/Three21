@@ -21,6 +21,7 @@ export default function ModelPage() {
     const [type, setType] = useState(null);
     const [isDemoMode, setIsDemoMode] = useState(false);
     const [demoConfig, setDemoConfig] = useState(null);
+    const [loadingSource, setLoadingSource] = useState('');
 
     useEffect(() => {
         async function loadModel() {
@@ -30,6 +31,16 @@ export default function ModelPage() {
                 setDemoConfig(DEMO_CONFIG);
                 setFileUrl(DEMO_CONFIG.url);
                 setType(DEMO_CONFIG.type);
+                
+                // Check cache status for demo loading feedback
+                const cacheInfo = window.three21DemoCache;
+                if (cacheInfo?.isCached) {
+                    setLoadingSource('cache');
+                } else if (cacheInfo?.isReady) {
+                    setLoadingSource('network');
+                } else {
+                    setLoadingSource('preparing');
+                }
                 return;
             }
 
@@ -73,8 +84,25 @@ export default function ModelPage() {
                 background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)',
             }}>
                 <h2 style={{ color: '#fff', fontWeight: 700, fontSize: '2rem', marginBottom: 12 }}>
-                    {isDemoMode ? 'Loading Demo Model...' : 'No model uploaded'}
+                    {isDemoMode ? (
+                        loadingSource === 'cache' ? 'Loading Demo Model from Cache...' :
+                        loadingSource === 'network' ? 'Downloading Demo Model...' :
+                        loadingSource === 'preparing' ? 'Preparing Demo...' :
+                        'Loading Demo Model...'
+                    ) : 'No model uploaded'}
                 </h2>
+                {isDemoMode && loadingSource && (
+                    <p style={{ 
+                        color: '#00ffd0', 
+                        fontSize: '1rem', 
+                        marginBottom: '20px',
+                        textAlign: 'center' 
+                    }}>
+                        {loadingSource === 'cache' && '⚡ Loading instantly from cache'}
+                        {loadingSource === 'network' && '🌐 First-time download (will be cached)'}
+                        {loadingSource === 'preparing' && '🔧 Initializing service worker'}
+                    </p>
+                )}
                 {!isDemoMode && (
                     <a href="/import-model" style={{
                         padding: '12px 28px',
