@@ -10,7 +10,7 @@ import { useModelInfo } from './ModelInfoContext';
 import { Toast } from './Toast';
 import html2canvas from 'html2canvas';
 
-export default function AnyModelViewer({ url, type }) {
+export default function AnyModelViewer({ url, type, isDemoMode = false, demoConfig = null }) {
     const modelRef = useRef();
     const canvasRef = useRef();
     const { initializeLayers, currentLayer, isAnimating, totalLayers, updateAnimation } = useLayerManager(modelRef);
@@ -26,35 +26,68 @@ export default function AnyModelViewer({ url, type }) {
         selectedPart, 
         closeAI, 
         setIsAIOpen, 
-        loadModelInfo 
+        loadModelInfo,
+        selectPart,
+        extractModelStructure,
+        demoConfig: contextDemoConfig
     } = modelInfoContext || {};
+    
+    // Use demo config from props or context
+    const activeDemoConfig = demoConfig || contextDemoConfig;
     
     // Load model info when component mounts
     useEffect(() => {
-        if (loadModelInfo) {
+        if (loadModelInfo && !isDemoMode) {
             loadModelInfo();
         }
-    }, [loadModelInfo]);
+    }, [loadModelInfo, isDemoMode]);
 
     const handleModelLoad = useCallback((scene) => {
         if (modelRef.current) {
             // Initialize layer system after model loads
             setTimeout(() => {
                 initializeLayers(modelRef.current);
+                
+                // Extract model structure for AI reference in demo mode
+                if (isDemoMode && extractModelStructure) {
+                    const structure = extractModelStructure(scene);
+                    console.log('Demo model structure extracted:', structure);
+                }
             }, 100);
         }
-    }, [initializeLayers]);
+    }, [initializeLayers, isDemoMode, extractModelStructure]);
 
-    // Handle object click
+    // Handle object click with demo mode integration
     const handleObjectClick = useCallback((objectName, clickedObject) => {
         console.log('Object clicked:', objectName, clickedObject);
+        
+        // In demo mode, automatically select part for AI
+        if (isDemoMode && selectPart) {
+            const partInfo = selectPart(objectName, clickedObject);
+            setToast({ 
+                message: `Selected: ${objectName}${activeDemoConfig ? ' - AI chat opened!' : ''}`, 
+                isVisible: true 
+            });
+            
+            // Auto-hide toast after 3 seconds
+            setTimeout(() => {
+                setToast({ message: '', isVisible: false });
+            }, 3000);
+            
+            return;
+        }
         
         // Show toast with object name
         setToast({
             message: `Clicked: ${objectName}`,
             isVisible: true
         });
-    }, []);
+        
+        // Auto-hide toast after 2 seconds
+        setTimeout(() => {
+            setToast({ message: '', isVisible: false });
+        }, 2000);
+    }, [isDemoMode, selectPart, activeDemoConfig]);
 
     // Hide toast
     const hideToast = useCallback(() => {
@@ -98,7 +131,7 @@ export default function AnyModelViewer({ url, type }) {
             position: 'relative' 
         }}>
             <Canvas 
-                camera={{ position: [0, 20, 40], fov: 60 }} 
+                camera={{ position: [0, 200, 400], fov: 60 }} 
                 shadows
                 gl={{ 
                     antialias: true, 

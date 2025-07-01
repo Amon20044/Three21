@@ -12,10 +12,84 @@ export const useModelInfo = () => {
     return context;
 };
 
-export function ModelInfoProvider({ children }) {
+export function ModelInfoProvider({ children, demoConfig = null }) {
     const [modelInfo, setModelInfo] = useState(null);
     const [isAIOpen, setIsAIOpen] = useState(false);
     const [selectedPart, setSelectedPart] = useState(null);
+    const [modelStructure, setModelStructure] = useState(null);
+
+    // Extract model structure for AI reference
+    const extractModelStructure = useCallback((scene) => {
+        const structure = {
+            name: demoConfig?.name || 'Model',
+            description: demoConfig?.description || '',
+            components: [],
+            hierarchy: {}
+        };
+
+        const traverseObject = (object, path = '') => {
+            const currentPath = path ? `${path}/${object.name}` : object.name;
+            
+            if (object.name) {
+                structure.components.push({
+                    name: object.name,
+                    path: currentPath,
+                    type: object.type,
+                    visible: object.visible,
+                    material: object.material?.name || null,
+                    geometry: object.geometry?.type || null,
+                    position: object.position ? [
+                        Number(object.position.x.toFixed(3)),
+                        Number(object.position.y.toFixed(3)),
+                        Number(object.position.z.toFixed(3))
+                    ] : null,
+                    rotation: object.rotation ? [
+                        Number(object.rotation.x.toFixed(3)),
+                        Number(object.rotation.y.toFixed(3)),
+                        Number(object.rotation.z.toFixed(3))
+                    ] : null
+                });
+            }
+
+            if (object.children && object.children.length > 0) {
+                structure.hierarchy[currentPath] = object.children.map(child => child.name).filter(Boolean);
+                object.children.forEach(child => traverseObject(child, currentPath));
+            }
+        };
+
+        if (scene) {
+            traverseObject(scene);
+        }
+
+        setModelStructure(structure);
+        return structure;
+    }, [demoConfig]);
+
+    // Handle part selection for AI integration
+    const selectPart = useCallback((partName, object) => {
+        const partInfo = {
+            name: partName,
+            path: partName,
+            type: object?.type || 'Unknown',
+            material: object?.material?.name || 'Unknown',
+            geometry: object?.geometry?.type || 'Unknown',
+            position: object?.position ? [
+                Number(object.position.x.toFixed(3)),
+                Number(object.position.y.toFixed(3)),
+                Number(object.position.z.toFixed(3))
+            ] : null,
+            boundingBox: object?.geometry?.boundingBox || null
+        };
+        
+        setSelectedPart(partInfo);
+        
+        // Auto-open AI chat when part is selected in demo mode
+        if (demoConfig) {
+            setIsAIOpen(true);
+        }
+        
+        return partInfo;
+    }, [demoConfig]);
 
     // Save model info to IndexedDB and state
     const saveModelInfo = useCallback(async (info) => {
@@ -47,15 +121,26 @@ export function ModelInfoProvider({ children }) {
     // Generate AI analysis of the model
     const generateModelAnalysis = useCallback(async (screenshot, modelData) => {
         try {
+            // Include demo configuration and model structure in AI context
+            const contextData = {
+                ...modelData,
+                isDemoMode: !!demoConfig,
+                demoInfo: demoConfig,
+                modelStructure: modelStructure,
+                selectedPart: selectedPart
+            };
+
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     messages: [{
                         role: 'user',
-                        content: 'Provide a comprehensive analysis of this 3D model. Include component identification, likely purpose, engineering insights, and reverse engineering observations.'
+                        content: demoConfig 
+                            ? `Analyze this ${demoConfig.name}. Here's the description: ${demoConfig.description}. Focus on the technical components and their functions.`
+                            : 'Provide a comprehensive analysis of this 3D model. Include component identification, likely purpose, engineering insights, and reverse engineering observations.'
                     }],
-                    modelInfo: modelData,
+                    modelInfo: contextData,
                     screenshot: screenshot
                 })
             });
@@ -70,7 +155,7 @@ export function ModelInfoProvider({ children }) {
             console.error('AI analysis failed:', error);
             return null;
         }
-    }, []);
+    }, [demoConfig, modelStructure, selectedPart]);
 
     // Update model info with AI analysis
     const updateModelAnalysis = useCallback(async (analysis) => {
@@ -102,6 +187,8 @@ export function ModelInfoProvider({ children }) {
         modelInfo,
         isAIOpen,
         selectedPart,
+        modelStructure,
+        demoConfig,
         saveModelInfo,
         loadModelInfo,
         generateModelAnalysis,
@@ -109,7 +196,9 @@ export function ModelInfoProvider({ children }) {
         openAIForPart,
         closeAI,
         setIsAIOpen,
-        setSelectedPart
+        setSelectedPart,
+        selectPart,
+        extractModelStructure
     };
 
     return (

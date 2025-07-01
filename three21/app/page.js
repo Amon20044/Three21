@@ -135,6 +135,19 @@ export default function Home() {
                     </svg>
                   </button>
                 </Link>
+                
+                {/* Demo Link */}
+                <Link
+                  href="/model?type=demo"
+                  className="demo-link-container "
+                >
+                  <button className="btn-demo">
+                    <svg className="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M19 10a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="btn-text">Try Demo</span>
+                  </button>
+                </Link>
               </div>
 
               <Suspense fallback={
@@ -286,6 +299,55 @@ export default function Home() {
           left: 2rem;
           z-index: 100;
           text-decoration: none;
+        }
+
+        /* Demo Link Container */
+        .demo-link-container {
+          position: absolute;
+          bottom: 2rem;
+          right: 2rem;
+          z-index: 100;
+          text-decoration: none;
+        }
+
+        /* Demo Button */
+        .btn-demo {
+          margin-left: 1rem;
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          height: 3rem;
+          padding: 0 1.5rem;
+          border: 1px solid var(--border);
+          background: var(--secondary);
+          color: var(--secondary-foreground);
+          border-radius: var(--radius);
+          font-size: 0.875rem;
+          font-weight: 500;
+          font-family: inherit;
+          text-decoration: none;
+          outline: none;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          overflow: hidden;
+          user-select: none;
+          white-space: nowrap;
+          min-width: 140px;
+        }
+
+        .btn-demo:focus-visible {
+          outline: 2px solid var(--ring);
+          outline-offset: 2px;
+        }
+
+        .btn-demo:hover:not(:disabled) {
+          background: var(--secondary-accent);
+          color: white;
+          border-color: var(--secondary-accent);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(var(--secondary-rgb), 0.15);
         }
 
         /* Beautiful Upload Button - Same as Demo Viewer */
@@ -588,7 +650,9 @@ export default function Home() {
         }
 
         @media (max-width: 768px) {
-
+        .btn-demo{
+        margin-left: 0;
+        margin-top: 1rem;}
         .main-cta-card{
         flex-direction: column;
         min-height: 1000px;
@@ -623,6 +687,13 @@ export default function Home() {
             left: 1rem;
             right: 1rem;
             position: absolute;
+          }
+
+          .demo-link-container {
+            bottom: 1rem;
+            right: 1rem;
+            position: absolute;
+            display: none; /* Hide demo button on mobile to avoid overlap */
           }
 
           .btn-upload {
